@@ -16,21 +16,19 @@ const uploadOnImageKit = async (localFilePath) => {
 
     // Upload the file to ImageKit
     const response = await imagekit.upload({
-      file: fileData, // required
-      fileName: localFilePath.split("/").pop(), // required
+      file: fileData,
+      fileName: localFilePath.split("/").pop(),
     });
 
     // File has been uploaded successfully
     console.log("File uploaded on ImageKit:", response.url);
-    // Remove the locally saved temporary file
-    fs.unlinkSync(localFilePath);
     return response;
-
+    
   } catch (error) {
     console.error("Upload Error:", error);
     // Remove the locally saved temporary file if the upload operation failed
     fs.unlinkSync(localFilePath);
-    throw error;
+    return null;
   }
 };
 
@@ -51,4 +49,4 @@ const uploadOnImageKit = async (localFilePath) => {
 //   }
 // };
 
-export default uploadOnImageKit;
+export { uploadOnImageKit };
