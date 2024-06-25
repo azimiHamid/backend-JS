@@ -26,11 +26,11 @@ const userSchema = new Schema(
       index: true,
     },
     avatar: {
-      type: String, // we use cloudinary service for generating url
+      type: String, // we use imageKit service for generating url
       required: true,
     },
     coverImage: {
-      type: String, // we use cloudinary service for generating url
+      type: String, // we use imageKit service for generating url
     },
     watchHistory: [
       {
@@ -72,7 +72,7 @@ userSchema.methods.generateAccessToken = function () {
   );
 };
 
-userSchema.methods.refreshToken = function () {
+userSchema.methods.generateRefreshToken = function () {
   return jwt.sign({ _id: this._id }, process.env.REFRESH_TOKEN_SECRET, {
     expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
   });

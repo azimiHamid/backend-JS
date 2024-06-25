@@ -19,11 +19,10 @@ const uploadOnImageKit = async (localFilePath) => {
       file: fileData,
       fileName: localFilePath.split("/").pop(),
     });
-
-    // File has been uploaded successfully
-    console.log("File uploaded on ImageKit:", response.url);
-    return response;
     
+    // console.log("File uploaded on ImageKit:", response.url);
+    fs.unlinkSync(localFilePath);
+    return response;
   } catch (error) {
     console.error("Upload Error:", error);
     // Remove the locally saved temporary file if the upload operation failed
