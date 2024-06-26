@@ -4,12 +4,30 @@ import { uploadOnImageKit } from "../utils/fileUpload.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import User from "../models/user.model.js";
 
-const generateAccessAndRefreshTokens = async (userId) => {
+// const generateAccessAndRefreshTokens = async (userId) => {
+//   try {
+//     const user = await User.findById(userId);
+//     const accessToken = user.generateAccessToken();
+//     const refreshToken = user.generateRefreshToken();
+
+//     user.refreshToken = refreshToken;
+//     await user.save({ validateBeforeSave: false });
+
+//     return { accessToken, refreshToken };
+//   } catch (error) {
+//     throw new ApiError(
+//       500,
+//       "Something went wrong while generating refresh and access token"
+//     );
+//   }
+// };
+
+const generateAccessAndRefreshTokens = async (user) => {
   try {
-    const user = await User.findById(userId);
     const accessToken = user.generateAccessToken();
     const refreshToken = user.generateRefreshToken();
 
+    // Update the refresh token in the database
     user.refreshToken = refreshToken;
     await user.save({ validateBeforeSave: false });
 
@@ -103,9 +121,12 @@ const loginUser = asyncHandler(async function (req, res) {
     throw new ApiError(401, "Invalid user credintials!");
   }
 
-  const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
-    user._id
-  );
+  // const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
+  //   user._id
+  // );
+
+  const { accessToken, refreshToken } =
+    await generateAccessAndRefreshTokens(user);
 
   const loggedInUser = await User.findById(user._id).select(
     "-password -refreshToken"
@@ -133,8 +154,6 @@ const loginUser = asyncHandler(async function (req, res) {
     );
 });
 
-const logout = asyncHandler(async function (req, res) {
-  
-});
+const logout = asyncHandler(async function (req, res) {});
 
 export { registerUser, loginUser };
